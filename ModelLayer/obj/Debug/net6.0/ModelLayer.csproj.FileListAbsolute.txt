@@ -1,0 +1,14 @@
+D:\.net\FundooNotes\ModelLayer\bin\Debug\net6.0\ModelLayer.deps.json
+D:\.net\FundooNotes\ModelLayer\bin\Debug\net6.0\ModelLayer.runtimeconfig.json
+D:\.net\FundooNotes\ModelLayer\bin\Debug\net6.0\ModelLayer.dll
+D:\.net\FundooNotes\ModelLayer\bin\Debug\net6.0\ModelLayer.pdb
+D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\ModelLayer.csproj.AssemblyReference.cache
+D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\ModelLayer.GeneratedMSBuildEditorConfig.editorconfig
+D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\ModelLayer.AssemblyInfoInputs.cache
+D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\ModelLayer.AssemblyInfo.cs
+D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\ModelLayer.csproj.CoreCompileInputs.cache
+D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\ModelLayer.dll
+D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\refint\ModelLayer.dll
+D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\ModelLayer.pdb
+D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\ModelLayer.genruntimeconfig.cache
+D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\ref\ModelLayer.dll

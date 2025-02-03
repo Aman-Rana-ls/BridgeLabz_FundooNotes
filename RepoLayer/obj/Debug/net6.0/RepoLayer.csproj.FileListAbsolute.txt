@@ -1,0 +1,17 @@
+D:\.net\FundooNotes\RepoLayer\bin\Debug\net6.0\RepoLayer.deps.json
+D:\.net\FundooNotes\RepoLayer\bin\Debug\net6.0\RepoLayer.runtimeconfig.json
+D:\.net\FundooNotes\RepoLayer\bin\Debug\net6.0\RepoLayer.dll
+D:\.net\FundooNotes\RepoLayer\bin\Debug\net6.0\RepoLayer.pdb
+D:\.net\FundooNotes\RepoLayer\bin\Debug\net6.0\ModelLayer.dll
+D:\.net\FundooNotes\RepoLayer\bin\Debug\net6.0\ModelLayer.pdb
+D:\.net\FundooNotes\RepoLayer\obj\Debug\net6.0\RepoLayer.csproj.AssemblyReference.cache
+D:\.net\FundooNotes\RepoLayer\obj\Debug\net6.0\RepoLayer.GeneratedMSBuildEditorConfig.editorconfig
+D:\.net\FundooNotes\RepoLayer\obj\Debug\net6.0\RepoLayer.AssemblyInfoInputs.cache
+D:\.net\FundooNotes\RepoLayer\obj\Debug\net6.0\RepoLayer.AssemblyInfo.cs
+D:\.net\FundooNotes\RepoLayer\obj\Debug\net6.0\RepoLayer.csproj.CoreCompileInputs.cache
+D:\.net\FundooNotes\RepoLayer\obj\Debug\net6.0\RepoLayer.csproj.Up2Date
+D:\.net\FundooNotes\RepoLayer\obj\Debug\net6.0\RepoLayer.dll
+D:\.net\FundooNotes\RepoLayer\obj\Debug\net6.0\refint\RepoLayer.dll
+D:\.net\FundooNotes\RepoLayer\obj\Debug\net6.0\RepoLayer.pdb
+D:\.net\FundooNotes\RepoLayer\obj\Debug\net6.0\RepoLayer.genruntimeconfig.cache
+D:\.net\FundooNotes\RepoLayer\obj\Debug\net6.0\ref\RepoLayer.dll
