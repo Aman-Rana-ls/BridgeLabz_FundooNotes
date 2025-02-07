@@ -12,3 +12,4 @@ D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\refint\ModelLayer.dll
 D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\ModelLayer.pdb
 D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\ModelLayer.genruntimeconfig.cache
 D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\ref\ModelLayer.dll
+D:\.net\FundooNotes\ModelLayer\obj\Debug\net6.0\ModelLayer.sourcelink.json

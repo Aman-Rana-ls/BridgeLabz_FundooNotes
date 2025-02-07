@@ -13,6 +13,7 @@
           "Microsoft.AspNetCore.Identity": "2.1.39",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.33",
           "Microsoft.AspNetCore.Mvc": "2.1.0",
+          "Microsoft.EntityFrameworkCore.Design": "6.0.33",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.33",
           "Microsoft.EntityFrameworkCore.Tools": "6.0.33",
           "ModelLayer": "1.0.0",

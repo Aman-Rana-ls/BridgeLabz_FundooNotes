@@ -17,3 +17,4 @@ D:\.net\FundooNotes\BusinessLayer\obj\Debug\net6.0\refint\BusinessLayer.dll
 D:\.net\FundooNotes\BusinessLayer\obj\Debug\net6.0\BusinessLayer.pdb
 D:\.net\FundooNotes\BusinessLayer\obj\Debug\net6.0\BusinessLayer.genruntimeconfig.cache
 D:\.net\FundooNotes\BusinessLayer\obj\Debug\net6.0\ref\BusinessLayer.dll
+D:\.net\FundooNotes\BusinessLayer\obj\Debug\net6.0\BusinessLayer.sourcelink.json

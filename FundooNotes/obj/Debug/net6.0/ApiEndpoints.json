@@ -1,24 +1,8 @@
 [
   {
-    "ContainingType": "FundooNotes.Controllers.AuthController",
-    "Method": "Login",
-    "RelativePath": "api/Auth/login",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "model",
-        "Type": "ModelLayer.Models.LoginModel",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "FundooNotes.Controllers.AuthController",
+    "ContainingType": "FundooNotes.Controllers.UserController",
     "Method": "Register",
-    "RelativePath": "api/Auth/register",
+    "RelativePath": "api/users",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -26,6 +10,133 @@
       {
         "Name": "model",
         "Type": "RegisterModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.UserController",
+    "Method": "SendVerificationEmail",
+    "RelativePath": "api/users/forget-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "RepoLayer.EmailModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.UserController",
+    "Method": "Login",
+    "RelativePath": "api/users/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "RepoLayer.LoginModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.UserController",
+    "Method": "ResetPassword",
+    "RelativePath": "api/users/set-new-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "RepoLayer.ResetPasswordModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.NoteController",
+    "Method": "Create",
+    "RelativePath": "notes",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "RepoLayer.NoteInputModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.NoteController",
+    "Method": "GetNotes",
+    "RelativePath": "notes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.NoteController",
+    "Method": "GetNoteById",
+    "RelativePath": "notes/{noteId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "noteId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.NoteController",
+    "Method": "Update",
+    "RelativePath": "notes/{noteId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "note",
+        "Type": "RepoLayer.UpdateNote",
+        "IsRequired": true
+      },
+      {
+        "Name": "noteId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.NoteController",
+    "Method": "Delete",
+    "RelativePath": "notes/{noteId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "noteId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
