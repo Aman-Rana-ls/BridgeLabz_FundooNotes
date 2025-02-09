@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Interfaces;
-using RepoLayer.EntityOne;
+using RepoLayer.Entity;
 using System.Threading.Tasks;
-using RepoLayer;
+using ModelLayer;
 
 namespace FundooNotes.Controllers
 {
 
-    [Route("api/users")]
+    [Route("/users")]
     [ApiController]
     public class UserController : ControllerBase
     {

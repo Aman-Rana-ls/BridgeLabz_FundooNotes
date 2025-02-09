@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using RepoLayer;
+using System.Security.Claims;
+using ModelLayer;
 
 namespace BusinessLayer.Interfaces
 {

@@ -5,11 +5,12 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RepoLayer.Interfaces;
-using RepoLayer.ContextOne;
-using RepoLayer.EntityOne;
+using RepoLayer.Context;
+using RepoLayer.Entity;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
+using ModelLayer;
 
 namespace RepoLayer.Services
 {

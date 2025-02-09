@@ -1,4 +1,4 @@
-﻿namespace RepoLayer
+﻿namespace ModelLayer
 {
     public class LoginModel
     {

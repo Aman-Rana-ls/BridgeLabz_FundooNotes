@@ -3,8 +3,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BusinessLayer.Interfaces;
-using RepoLayer;
-using RepoLayer.EntityOne;
+using ModelLayer;
+using RepoLayer.Entity;
 using RepoLayer.Interfaces;
 
 namespace BusinessLayer.Services
@@ -45,13 +45,7 @@ namespace BusinessLayer.Services
 
         public async Task<bool> DeleteNoteAsync(int noteId, int userId)
         {
-            var note = await _noteRL.GetNoteByIdAsync(noteId);
-            if (note == null || note.CreatedBy != userId)
-            {
-                return false;
-            }
-
-            return await _noteRL.DeleteNoteAsync(noteId);
+            return await _noteRL.DeleteNoteAsync(noteId, userId);
         }
 
         public async Task<Note> GetNoteByIdAsync(int noteId)

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using RepoLayer;
-using RepoLayer.EntityOne;
+using ModelLayer;
+using RepoLayer.Entity;
 
 namespace BusinessLayer.Interfaces
 {

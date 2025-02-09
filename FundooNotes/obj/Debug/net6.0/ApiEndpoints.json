@@ -1,64 +1,100 @@
 [
   {
-    "ContainingType": "FundooNotes.Controllers.UserController",
-    "Method": "Register",
-    "RelativePath": "api/users",
+    "ContainingType": "FundooNotes.Controllers.LabelController",
+    "Method": "GetAllLabels",
+    "RelativePath": "label",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.LabelController",
+    "Method": "CreateLabel",
+    "RelativePath": "label",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "model",
-        "Type": "RegisterModel",
+        "Name": "labelInput",
+        "Type": "ModelLayer.LabelInputModel",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "FundooNotes.Controllers.UserController",
-    "Method": "SendVerificationEmail",
-    "RelativePath": "api/users/forget-password",
-    "HttpMethod": "POST",
+    "ContainingType": "FundooNotes.Controllers.LabelController",
+    "Method": "GetLabelById",
+    "RelativePath": "label/{id}",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "model",
-        "Type": "RepoLayer.EmailModel",
+        "Name": "id",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "FundooNotes.Controllers.UserController",
-    "Method": "Login",
-    "RelativePath": "api/users/login",
-    "HttpMethod": "POST",
+    "ContainingType": "FundooNotes.Controllers.LabelController",
+    "Method": "DeleteLabel",
+    "RelativePath": "label/{id}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "model",
-        "Type": "RepoLayer.LoginModel",
+        "Name": "id",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "FundooNotes.Controllers.UserController",
-    "Method": "ResetPassword",
-    "RelativePath": "api/users/set-new-password",
+    "ContainingType": "FundooNotes.Controllers.LabelController",
+    "Method": "AssignLabelToNote",
+    "RelativePath": "label/assign",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "model",
-        "Type": "RepoLayer.ResetPasswordModel",
-        "IsRequired": true
+        "Name": "noteId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "labelId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.LabelController",
+    "Method": "RemoveLabelFromNote",
+    "RelativePath": "label/remove",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "noteId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "labelId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -73,7 +109,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "RepoLayer.NoteInputModel",
+        "Type": "ModelLayer.NoteInputModel",
         "IsRequired": true
       }
     ],
@@ -115,7 +151,7 @@
     "Parameters": [
       {
         "Name": "note",
-        "Type": "RepoLayer.UpdateNote",
+        "Type": "ModelLayer.UpdateNote",
         "IsRequired": true
       },
       {
@@ -137,6 +173,70 @@
       {
         "Name": "noteId",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.UserController",
+    "Method": "Register",
+    "RelativePath": "users",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "ModelLayer.RegisterModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.UserController",
+    "Method": "SendVerificationEmail",
+    "RelativePath": "users/forget-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "ModelLayer.EmailModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.UserController",
+    "Method": "Login",
+    "RelativePath": "users/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "ModelLayer.LoginModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.UserController",
+    "Method": "ResetPassword",
+    "RelativePath": "users/set-new-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "ModelLayer.ResetPasswordModel",
         "IsRequired": true
       }
     ],

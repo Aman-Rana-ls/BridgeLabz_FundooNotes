@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using RepoLayer.Entity;
 
-namespace RepoLayer.EntityOne
+namespace RepoLayer.Entity
 {
     public class User
     {
@@ -24,5 +26,9 @@ namespace RepoLayer.EntityOne
 
         // Add the Notes navigation property to represent the one-to-many relationship with Note
         public virtual ICollection<Note> Notes { get; set; } = new List<Note>();
+
+        // Add the CollaboratedNotes navigation property to represent the many-to-many relationship with Note
+        [JsonIgnore] // Prevent circular reference during serialization
+        public virtual ICollection<NoteCollaborator> CollaboratedNotes { get; set; } = new List<NoteCollaborator>();
     }
 }

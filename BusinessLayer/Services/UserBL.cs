@@ -10,7 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using RepoLayer;
+using ModelLayer;
 using RepoLayer.Interfaces;
 
 namespace BusinessLayer.Services
@@ -21,7 +21,7 @@ namespace BusinessLayer.Services
         private readonly IConfiguration _configuration;
         private readonly string _smtpServer = "smtp.gmail.com";
         private readonly string _smtpUser = "gsh401111@gmail.com";
-        private readonly string _smtpPassword = "dgwd prlw vydg stiv";
+        private readonly string _smtpPassword = "awsl zxui xxzx gvcu";
         private readonly int _smtpPort = 587;
 
         public UserBL(IUserRL authRepository, IConfiguration configuration)

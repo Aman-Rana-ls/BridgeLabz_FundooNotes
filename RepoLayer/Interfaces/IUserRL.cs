@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using RepoLayer;
+using ModelLayer;
 
 namespace RepoLayer.Interfaces
 {

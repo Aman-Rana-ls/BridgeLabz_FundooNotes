@@ -6,11 +6,13 @@ using RepoLayer.Services;
 using RepoLayer.Interfaces;
 using BusinessLayer.Interfaces;
 using BusinessLayer.Services;
-using RepoLayer.ContextOne;
+using RepoLayer.Context;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
-        b => b.MigrationsAssembly("RepoLayer") // Ensure correct assembly is specified
+        b => b.MigrationsAssembly("RepoLayer")
     )
 );
 
@@ -27,10 +29,12 @@ builder.Services.AddScoped<IUserBL, UserBL>();
 builder.Services.AddScoped<INoteBL, NoteBL>();
 builder.Services.AddScoped<IUserRL, UserRL>();
 builder.Services.AddScoped<INoteRL, NoteRL>();
+builder.Services.AddScoped<ILabelBL, LabelBL>();
+builder.Services.AddScoped<ILabelRL, LabelRL>();
 
 builder.Services.AddControllers();
 
-// Enable CORS for all origins (adjust as needed for security)
+// Enable CORS for all origins
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -44,8 +48,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "FundooNotes API", Version = "v1" });
-
-    // JWT Authentication for Swagger UI
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Enter the JWT token here",
@@ -54,7 +56,6 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.Http,
         Scheme = "Bearer"
     });
-
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -88,7 +89,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidAudience = jwtSettings["Audience"],
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero // Eliminate clock skew during token validation
+            ClockSkew = TimeSpan.Zero
+        };
+
+        // Custom 401 response when token is missing
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = async context =>
+            {
+                context.HandleResponse();
+                context.Response.StatusCode = 401;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsJsonAsync(new { success = false, message = "Please pass a valid token" });
+            }
         };
     });
 

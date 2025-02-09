@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using RepoLayer;
-using RepoLayer.EntityOne;
+using RepoLayer.Entity;
+using ModelLayer;
 
 namespace RepoLayer.Interfaces
 {
@@ -10,8 +10,7 @@ namespace RepoLayer.Interfaces
         Task<Note> CreateNoteAsync(Note note);
         Task<List<Note>> GetNotesByUserAsync(int userId);
         Task<Note> UpdateNoteAsync(UpdateNote note, int noteId, int userId);
-        Task<bool> DeleteNoteAsync(int noteId);
+        Task<bool> DeleteNoteAsync(int noteId, int userId);
         Task<Note> GetNoteByIdAsync(int noteId);
-
     }
 }

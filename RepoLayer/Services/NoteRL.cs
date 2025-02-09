@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using RepoLayer;
-using RepoLayer.EntityOne;
-using RepoLayer.ContextOne;
+using RepoLayer.Context;
+using RepoLayer.Entity;
 using RepoLayer.Interfaces;
+using ModelLayer;
 
 namespace RepoLayer.Services
 {
@@ -29,17 +29,24 @@ namespace RepoLayer.Services
         {
             return await _context.Notes
                 .Where(n => n.CreatedBy == userId && !n.IsDeleted)
+                .Include(n => n.NoteLabels) // Include NoteLabels
+                .ThenInclude(nl => nl.Label) // Include Label for each NoteLabel
                 .ToListAsync();
         }
 
         public async Task<Note> UpdateNoteAsync(UpdateNote note, int noteId, int userId)
         {
-            var existingNote = await _context.Notes.FindAsync(noteId);
-            if (existingNote == null || existingNote.CreatedBy != userId)
+            var existingNote = await _context.Notes
+                .Include(n => n.NoteLabels) // Include NoteLabels
+                .ThenInclude(nl => nl.Label) // Include Label for each NoteLabel
+                .FirstOrDefaultAsync(n => n.NoteId == noteId && n.CreatedBy == userId);
+
+            if (existingNote == null)
             {
-                return null; // Prevent unauthorized modifications
+                return null; // Note not found or unauthorized
             }
 
+            // Update note properties
             existingNote.Title = note.Title;
             existingNote.Description = note.Description;
             existingNote.Color = note.Color;
@@ -50,22 +57,27 @@ namespace RepoLayer.Services
             return existingNote;
         }
 
-        public async Task<bool> DeleteNoteAsync(int noteId)
+        public async Task<bool> DeleteNoteAsync(int noteId, int userId)
         {
-            var note = await _context.Notes.FindAsync(noteId);
+            var note = await _context.Notes
+                .FirstOrDefaultAsync(n => n.NoteId == noteId && n.CreatedBy == userId);
+
             if (note == null)
             {
-                return false;
+                return false; // Note not found or unauthorized
             }
 
             note.IsDeleted = true;
             await _context.SaveChangesAsync();
             return true;
         }
+
         public async Task<Note> GetNoteByIdAsync(int noteId)
         {
-            return await _context.Notes.FindAsync(noteId);
+            return await _context.Notes
+                .Include(n => n.NoteLabels) // Include NoteLabels
+                .ThenInclude(nl => nl.Label) // Include Label for each NoteLabel
+                .FirstOrDefaultAsync(n => n.NoteId == noteId);
         }
-
     }
 }

@@ -5,6 +5,151 @@
     "version": "v1"
   },
   "paths": {
+    "/label": {
+      "get": {
+        "tags": [
+          "Label"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Label"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelInputModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelInputModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelInputModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/label/{id}": {
+      "get": {
+        "tags": [
+          "Label"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Label"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/label/assign": {
+      "post": {
+        "tags": [
+          "Label"
+        ],
+        "parameters": [
+          {
+            "name": "noteId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "labelId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/label/remove": {
+      "delete": {
+        "tags": [
+          "Label"
+        ],
+        "parameters": [
+          {
+            "name": "noteId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "labelId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/notes": {
       "post": {
         "tags": [
@@ -130,7 +275,7 @@
         }
       }
     },
-    "/api/users": {
+    "/users": {
       "post": {
         "tags": [
           "User"
@@ -161,7 +306,7 @@
         }
       }
     },
-    "/api/users/login": {
+    "/users/login": {
       "post": {
         "tags": [
           "User"
@@ -192,7 +337,7 @@
         }
       }
     },
-    "/api/users/forget-password": {
+    "/users/forget-password": {
       "post": {
         "tags": [
           "User"
@@ -223,7 +368,7 @@
         }
       }
     },
-    "/api/users/set-new-password": {
+    "/users/set-new-password": {
       "post": {
         "tags": [
           "User"
@@ -263,6 +408,27 @@
           "email": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LabelInputModel": {
+        "required": [
+          "name",
+          "noteIds"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "noteIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         },
         "additionalProperties": false

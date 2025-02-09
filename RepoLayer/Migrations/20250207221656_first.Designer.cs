@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RepoLayer.ContextOne;
+using RepoLayer.Context;
 
 #nullable disable
 
 namespace RepoLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250207133430_first")]
+    [Migration("20250207221656_first")]
     partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,7 +23,24 @@ namespace RepoLayer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("RepoLayer.EntityOne.Note", b =>
+            modelBuilder.Entity("Label", b =>
+                {
+                    b.Property<int>("LabelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LabelId"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("LabelId");
+
+                    b.ToTable("Labels");
+                });
+
+            modelBuilder.Entity("Note", b =>
                 {
                     b.Property<int>("NoteId")
                         .ValueGeneratedOnAdd()
@@ -59,6 +76,21 @@ namespace RepoLayer.Migrations
                     b.ToTable("Notes");
                 });
 
+            modelBuilder.Entity("NoteLabel", b =>
+                {
+                    b.Property<int>("NoteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LabelId")
+                        .HasColumnType("int");
+
+                    b.HasKey("NoteId", "LabelId");
+
+                    b.HasIndex("LabelId");
+
+                    b.ToTable("NoteLabels");
+                });
+
             modelBuilder.Entity("RepoLayer.EntityOne.User", b =>
                 {
                     b.Property<int>("Id")
@@ -88,7 +120,7 @@ namespace RepoLayer.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("RepoLayer.EntityOne.Note", b =>
+            modelBuilder.Entity("Note", b =>
                 {
                     b.HasOne("RepoLayer.EntityOne.User", "User")
                         .WithMany("Notes")
@@ -97,6 +129,35 @@ namespace RepoLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NoteLabel", b =>
+                {
+                    b.HasOne("Label", "Label")
+                        .WithMany("NoteLabels")
+                        .HasForeignKey("LabelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Note", "Note")
+                        .WithMany("NoteLabels")
+                        .HasForeignKey("NoteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Label");
+
+                    b.Navigation("Note");
+                });
+
+            modelBuilder.Entity("Label", b =>
+                {
+                    b.Navigation("NoteLabels");
+                });
+
+            modelBuilder.Entity("Note", b =>
+                {
+                    b.Navigation("NoteLabels");
                 });
 
             modelBuilder.Entity("RepoLayer.EntityOne.User", b =>

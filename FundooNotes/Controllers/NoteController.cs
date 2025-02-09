@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Interfaces;
-using RepoLayer.EntityOne;
+using RepoLayer.Entity;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using System.Linq;
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
-using RepoLayer;
+using ModelLayer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FundooNotes.Controllers
 {
@@ -17,12 +18,10 @@ namespace FundooNotes.Controllers
     public class NoteController : ControllerBase
     {
         private readonly INoteBL _noteBL;
-        //private readonly ILabelService _labelService;
 
         public NoteController(INoteBL noteBL)
         {
             _noteBL = noteBL;
-            //_labelService = labelService;
         }
 
         [HttpPost]
@@ -31,18 +30,20 @@ namespace FundooNotes.Controllers
             try
             {
                 var userId = _noteBL.GetUserIdFromToken(User);
+
                 var createdNote = await _noteBL.CreateNoteAsync(model, userId);
                 return Ok(new ResponseModel<Note> { Success = true, Message = "Note created successfully", Data = createdNote });
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized(new ResponseModel<string> { Success = false, Message = ex.Message });
+                return Unauthorized(new ResponseModel<string> { Success = false, Message = "Please Enter a valid token" });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new ResponseModel<string> { Success = false, Message = "An error occurred: " + ex.Message });
             }
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetNotes()
@@ -62,6 +63,7 @@ namespace FundooNotes.Controllers
                 return StatusCode(500, new ResponseModel<string> { Success = false, Message = "An error occurred: " + ex.Message });
             }
         }
+
         [HttpGet("{noteId}")]
         public async Task<IActionResult> GetNoteById(int noteId)
         {
@@ -91,7 +93,6 @@ namespace FundooNotes.Controllers
                 return StatusCode(500, new ResponseModel<string> { Success = false, Message = "An error occurred: " + ex.Message });
             }
         }
-
 
         [HttpPut("{noteId}")]
         public async Task<IActionResult> Update([FromBody] UpdateNote note, int noteId)
@@ -123,6 +124,7 @@ namespace FundooNotes.Controllers
                 return StatusCode(500, new ResponseModel<string> { Success = false, Message = "An error occurred: " + ex.Message });
             }
         }
+
         [HttpDelete("{noteId}")]
         public async Task<IActionResult> Delete(int noteId)
         {
