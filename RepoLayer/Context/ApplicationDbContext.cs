@@ -21,7 +21,7 @@ namespace RepoLayer.Context
                 .HasOne(n => n.User)
                 .WithMany(u => u.Notes)
                 .HasForeignKey(n => n.CreatedBy)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade); // Keep this as Cascade
 
             // Configure the many-to-many relationship between Note and Label
             modelBuilder.Entity<NoteLabel>()
@@ -30,12 +30,14 @@ namespace RepoLayer.Context
             modelBuilder.Entity<NoteLabel>()
                 .HasOne(nl => nl.Note)
                 .WithMany(n => n.NoteLabels)
-                .HasForeignKey(nl => nl.NoteId);
+                .HasForeignKey(nl => nl.NoteId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete NoteLabels when Note is deleted
 
             modelBuilder.Entity<NoteLabel>()
                 .HasOne(nl => nl.Label)
                 .WithMany(l => l.NoteLabels)
-                .HasForeignKey(nl => nl.LabelId);
+                .HasForeignKey(nl => nl.LabelId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete NoteLabels when Label is deleted
 
             // Configure the many-to-many relationship between Note and User (Collaborators)
             modelBuilder.Entity<NoteCollaborator>()
@@ -44,12 +46,14 @@ namespace RepoLayer.Context
             modelBuilder.Entity<NoteCollaborator>()
                 .HasOne(nc => nc.Note)
                 .WithMany(n => n.Collaborators)
-                .HasForeignKey(nc => nc.NoteId);
+                .HasForeignKey(nc => nc.NoteId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete NoteCollaborators when Note is deleted
 
             modelBuilder.Entity<NoteCollaborator>()
                 .HasOne(nc => nc.User)
                 .WithMany(u => u.CollaboratedNotes)
-                .HasForeignKey(nc => nc.UserId);
+                .HasForeignKey(nc => nc.UserId)
+                .OnDelete(DeleteBehavior.Restrict); // Change this to Restrict or NoAction
         }
     }
 }

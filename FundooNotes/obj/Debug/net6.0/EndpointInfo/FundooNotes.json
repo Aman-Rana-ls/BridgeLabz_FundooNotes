@@ -5,6 +5,87 @@
     "version": "v1"
   },
   "paths": {
+    "/api/Collaborator/add": {
+      "post": {
+        "tags": [
+          "Collaborator"
+        ],
+        "parameters": [
+          {
+            "name": "noteId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "collaboratorEmail",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Collaborator/remove": {
+      "delete": {
+        "tags": [
+          "Collaborator"
+        ],
+        "parameters": [
+          {
+            "name": "noteId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "collaboratorEmail",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Collaborator/get/{noteId}": {
+      "get": {
+        "tags": [
+          "Collaborator"
+        ],
+        "parameters": [
+          {
+            "name": "noteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/label": {
       "get": {
         "tags": [

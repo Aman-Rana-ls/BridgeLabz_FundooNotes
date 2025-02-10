@@ -28,11 +28,14 @@ namespace RepoLayer.Services
         public async Task<List<Note>> GetNotesByUserAsync(int userId)
         {
             return await _context.Notes
-                .Where(n => n.CreatedBy == userId && !n.IsDeleted)
-                .Include(n => n.NoteLabels) // Include NoteLabels
-                .ThenInclude(nl => nl.Label) // Include Label for each NoteLabel
+                .Where(n => (n.CreatedBy == userId || n.Collaborators.Any(c => c.UserId == userId)) && !n.IsDeleted)
+                .Include(n => n.NoteLabels)
+                    .ThenInclude(nl => nl.Label)
+                .Include(n => n.Collaborators)
+                    .ThenInclude(c => c.User) // Include collaborator users
                 .ToListAsync();
         }
+
 
         public async Task<Note> UpdateNoteAsync(UpdateNote note, int noteId, int userId)
         {
@@ -75,9 +78,12 @@ namespace RepoLayer.Services
         public async Task<Note> GetNoteByIdAsync(int noteId)
         {
             return await _context.Notes
-                .Include(n => n.NoteLabels) // Include NoteLabels
-                .ThenInclude(nl => nl.Label) // Include Label for each NoteLabel
+                .Include(n => n.NoteLabels)
+                    .ThenInclude(nl => nl.Label)
+                .Include(n => n.Collaborators)
+                    .ThenInclude(c => c.User) // Include collaborator users
                 .FirstOrDefaultAsync(n => n.NoteId == noteId);
         }
+
     }
 }

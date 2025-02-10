@@ -1,5 +1,63 @@
 [
   {
+    "ContainingType": "FundooNotes.Controllers.CollaboratorController",
+    "Method": "AddCollaborator",
+    "RelativePath": "api/Collaborator/add",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "noteId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "collaboratorEmail",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.CollaboratorController",
+    "Method": "GetCollaboratorsByNoteId",
+    "RelativePath": "api/Collaborator/get/{noteId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "noteId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.CollaboratorController",
+    "Method": "RemoveCollaborator",
+    "RelativePath": "api/Collaborator/remove",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "noteId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "collaboratorEmail",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "FundooNotes.Controllers.LabelController",
     "Method": "GetAllLabels",
     "RelativePath": "label",
