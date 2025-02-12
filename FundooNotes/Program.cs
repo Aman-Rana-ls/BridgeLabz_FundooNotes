@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
-using RepoLayer.Services;
 using RepositoryLayer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,7 +34,6 @@ builder.Services.AddScoped<ILabelBL, LabelBL>();
 builder.Services.AddScoped<ILabelRL, LabelRL>();
 builder.Services.AddScoped<ICollaboratorBL, CollaboratorBL>();
 builder.Services.AddScoped<ICollaboratorRL, CollaboratorRL>();
-
 
 builder.Services.AddControllers();
 
@@ -109,6 +107,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             }
         };
     });
+
+// Add logging
+builder.Services.AddLogging(options =>
+{
+    options.AddConsole();
+    options.AddDebug();
+    options.AddEventSourceLogger();
+});
 
 var app = builder.Build();
 

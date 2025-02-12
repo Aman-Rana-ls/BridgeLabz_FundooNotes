@@ -13,7 +13,7 @@ namespace RepoLayer.Entity
         [Required]
         public string Name { get; set; }
 
-        [JsonIgnore] // Prevent circular reference during serialization
+        [JsonIgnore]
         public virtual ICollection<NoteLabel> NoteLabels { get; set; } = new List<NoteLabel>();
     }
 }

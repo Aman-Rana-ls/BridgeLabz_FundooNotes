@@ -10,9 +10,17 @@ namespace BusinessLayer.Interfaces
     {
         Task<Note> CreateNoteAsync(NoteInputModel model, int userId);
         Task<List<Note>> GetNotesByUserAsync(int userId);
+        Task<List<Note>> GetNotesFromBin(int userId);
+        Task<List<Note>> GetArchiveNotes(int userId);
         Task<Note> UpdateNoteAsync(UpdateNote note, int noteId, int userId);
+        Task<Note> ArchiveNoteAsync(int noteId, int userId);
+        Task<bool> UnArchiveNoteAsync(int noteId,int userId);
+        
+        Task<bool> RestoreFromBin(int noteId, int userId);
         Task<bool> DeleteNoteAsync(int noteId, int userId);
+        Task<bool> DeletePermNoteAsync(int noteId, int userId); 
         Task<Note> GetNoteByIdAsync(int noteId);
+
         int GetUserIdFromToken(ClaimsPrincipal user);
     }
 }

@@ -21,7 +21,7 @@ namespace RepoLayer.Context
                 .HasOne(n => n.User)
                 .WithMany(u => u.Notes)
                 .HasForeignKey(n => n.CreatedBy)
-                .OnDelete(DeleteBehavior.Cascade); // Keep this as Cascade
+                .OnDelete(DeleteBehavior.Cascade); 
 
             // Configure the many-to-many relationship between Note and Label
             modelBuilder.Entity<NoteLabel>()
@@ -31,7 +31,7 @@ namespace RepoLayer.Context
                 .HasOne(nl => nl.Note)
                 .WithMany(n => n.NoteLabels)
                 .HasForeignKey(nl => nl.NoteId)
-                .OnDelete(DeleteBehavior.Cascade); // Cascade delete NoteLabels when Note is deleted
+                .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<NoteLabel>()
                 .HasOne(nl => nl.Label)

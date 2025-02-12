@@ -24,13 +24,13 @@ public class Note
     [ForeignKey("User")]
     public int CreatedBy { get; set; }
 
-    [JsonIgnore] // Prevent circular reference during serialization
+    [JsonIgnore]
     public virtual User? User { get; set; }
 
-    [JsonIgnore] // Prevent serializing the NoteLabels collection
+    [JsonIgnore] 
     public virtual ICollection<NoteLabel> NoteLabels { get; set; } = new List<NoteLabel>();
 
-    [JsonIgnore] // Prevent serializing the Collaborators collection
+    [JsonIgnore] 
     public virtual ICollection<NoteCollaborator> Collaborators { get; set; } = new List<NoteCollaborator>();
 
     [NotMapped]

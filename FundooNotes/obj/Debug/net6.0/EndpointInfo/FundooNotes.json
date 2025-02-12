@@ -333,7 +333,125 @@
             "description": "Success"
           }
         }
-      },
+      }
+    },
+    "/notes/archive/{noteId}": {
+      "put": {
+        "tags": [
+          "Note"
+        ],
+        "parameters": [
+          {
+            "name": "noteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/notes/archived": {
+      "get": {
+        "tags": [
+          "Note"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/notes/unarchive/{noteId}": {
+      "put": {
+        "tags": [
+          "Note"
+        ],
+        "parameters": [
+          {
+            "name": "noteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/notes/delete/{noteId}": {
+      "put": {
+        "tags": [
+          "Note"
+        ],
+        "parameters": [
+          {
+            "name": "noteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/notes/bin": {
+      "get": {
+        "tags": [
+          "Note"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/notes/restore-from-bin/{noteId}": {
+      "put": {
+        "tags": [
+          "Note"
+        ],
+        "parameters": [
+          {
+            "name": "noteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/notes/delete-permanently/{noteId}": {
       "delete": {
         "tags": [
           "Note"
