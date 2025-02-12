@@ -14,6 +14,8 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using RepositoryLayer.Services;
+using StackExchange.Redis;
+using RepoLayer.Entity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +37,10 @@ builder.Services.AddScoped<ILabelRL, LabelRL>();
 builder.Services.AddScoped<ICollaboratorBL, CollaboratorBL>();
 builder.Services.AddScoped<ICollaboratorRL, CollaboratorRL>();
 
+// Register Redis connection
+builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnection")));
+
+// Add controllers
 builder.Services.AddControllers();
 
 // Enable CORS for all origins

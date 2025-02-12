@@ -333,9 +333,30 @@
             "description": "Success"
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "Note"
+        ],
+        "parameters": [
+          {
+            "name": "noteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
       }
     },
-    "/notes/archive/{noteId}": {
+    "/notes/{noteId}/archive": {
       "put": {
         "tags": [
           "Note"
@@ -370,7 +391,7 @@
         }
       }
     },
-    "/notes/unarchive/{noteId}": {
+    "/notes/{noteId}/unarchive": {
       "put": {
         "tags": [
           "Note"
@@ -393,7 +414,7 @@
         }
       }
     },
-    "/notes/delete/{noteId}": {
+    "/notes/{noteId}/delete": {
       "put": {
         "tags": [
           "Note"
@@ -428,31 +449,8 @@
         }
       }
     },
-    "/notes/restore-from-bin/{noteId}": {
+    "/notes/{noteId}/restore-from-bin": {
       "put": {
-        "tags": [
-          "Note"
-        ],
-        "parameters": [
-          {
-            "name": "noteId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/notes/delete-permanently/{noteId}": {
-      "delete": {
         "tags": [
           "Note"
         ],

@@ -85,3 +85,5 @@ D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\BCrypt.Net-Next.dll
 D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
 D:\.net\FundooNotes\FundooNotes\obj\Debug\net6.0\FundooNotes.sourcelink.json
+D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\Pipelines.Sockets.Unofficial.dll
+D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\StackExchange.Redis.dll

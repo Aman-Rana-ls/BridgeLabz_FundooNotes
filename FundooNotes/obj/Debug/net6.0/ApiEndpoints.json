@@ -222,8 +222,72 @@
   },
   {
     "ContainingType": "FundooNotes.Controllers.NoteController",
+    "Method": "DeletePermanently",
+    "RelativePath": "notes/{noteId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "noteId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.NoteController",
     "Method": "Archive",
-    "RelativePath": "notes/archive/{noteId}",
+    "RelativePath": "notes/{noteId}/archive",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "noteId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.NoteController",
+    "Method": "Delete",
+    "RelativePath": "notes/{noteId}/delete",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "noteId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.NoteController",
+    "Method": "Restore",
+    "RelativePath": "notes/{noteId}/restore-from-bin",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "noteId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.NoteController",
+    "Method": "Unarchive",
+    "RelativePath": "notes/{noteId}/unarchive",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -254,70 +318,6 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "FundooNotes.Controllers.NoteController",
-    "Method": "DeletePermanently",
-    "RelativePath": "notes/delete-permanently/{noteId}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "noteId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "FundooNotes.Controllers.NoteController",
-    "Method": "Delete",
-    "RelativePath": "notes/delete/{noteId}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "noteId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "FundooNotes.Controllers.NoteController",
-    "Method": "Restore",
-    "RelativePath": "notes/restore-from-bin/{noteId}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "noteId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "FundooNotes.Controllers.NoteController",
-    "Method": "Unarchive",
-    "RelativePath": "notes/unarchive/{noteId}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "noteId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
     "ReturnTypes": []
   },
   {
