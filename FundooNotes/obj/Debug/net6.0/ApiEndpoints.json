@@ -60,7 +60,7 @@
   {
     "ContainingType": "FundooNotes.Controllers.LabelController",
     "Method": "GetAllLabels",
-    "RelativePath": "label",
+    "RelativePath": "labels",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -70,7 +70,7 @@
   {
     "ContainingType": "FundooNotes.Controllers.LabelController",
     "Method": "CreateLabel",
-    "RelativePath": "label",
+    "RelativePath": "labels",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -86,7 +86,7 @@
   {
     "ContainingType": "FundooNotes.Controllers.LabelController",
     "Method": "GetLabelById",
-    "RelativePath": "label/{id}",
+    "RelativePath": "labels/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -102,7 +102,7 @@
   {
     "ContainingType": "FundooNotes.Controllers.LabelController",
     "Method": "DeleteLabel",
-    "RelativePath": "label/{id}",
+    "RelativePath": "labels/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -118,7 +118,7 @@
   {
     "ContainingType": "FundooNotes.Controllers.LabelController",
     "Method": "AssignLabelToNote",
-    "RelativePath": "label/assign",
+    "RelativePath": "labels/assign",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -139,7 +139,7 @@
   {
     "ContainingType": "FundooNotes.Controllers.LabelController",
     "Method": "RemoveLabelFromNote",
-    "RelativePath": "label/remove",
+    "RelativePath": "labels/remove",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -222,7 +222,7 @@
   },
   {
     "ContainingType": "FundooNotes.Controllers.NoteController",
-    "Method": "DeletePermanently",
+    "Method": "Delete",
     "RelativePath": "notes/{noteId}",
     "HttpMethod": "DELETE",
     "IsController": true,
@@ -254,9 +254,9 @@
   },
   {
     "ContainingType": "FundooNotes.Controllers.NoteController",
-    "Method": "Delete",
-    "RelativePath": "notes/{noteId}/delete",
-    "HttpMethod": "PUT",
+    "Method": "DeletePermanently",
+    "RelativePath": "notes/{noteId}/delete-permanently",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [

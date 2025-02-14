@@ -86,7 +86,7 @@
         }
       }
     },
-    "/label": {
+    "/labels": {
       "get": {
         "tags": [
           "Label"
@@ -127,7 +127,7 @@
         }
       }
     },
-    "/label/{id}": {
+    "/labels/{id}": {
       "get": {
         "tags": [
           "Label"
@@ -171,7 +171,7 @@
         }
       }
     },
-    "/label/assign": {
+    "/labels/assign": {
       "post": {
         "tags": [
           "Label"
@@ -201,7 +201,7 @@
         }
       }
     },
-    "/label/remove": {
+    "/labels/remove": {
       "delete": {
         "tags": [
           "Label"
@@ -414,7 +414,19 @@
         }
       }
     },
-    "/notes/{noteId}/delete": {
+    "/notes/bin": {
+      "get": {
+        "tags": [
+          "Note"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/notes/{noteId}/restore-from-bin": {
       "put": {
         "tags": [
           "Note"
@@ -437,20 +449,8 @@
         }
       }
     },
-    "/notes/bin": {
-      "get": {
-        "tags": [
-          "Note"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/notes/{noteId}/restore-from-bin": {
-      "put": {
+    "/notes/{noteId}/delete-permanently": {
+      "delete": {
         "tags": [
           "Note"
         ],

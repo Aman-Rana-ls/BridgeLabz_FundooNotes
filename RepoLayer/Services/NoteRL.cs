@@ -7,6 +7,8 @@ using RepoLayer.Entity;
 using RepoLayer.Interfaces;
 using ModelLayer;
 using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
+using System.Text.Json;
 
 namespace RepoLayer.Services
 {
@@ -14,287 +16,277 @@ namespace RepoLayer.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<NoteRL> _logger;
+        private readonly IDatabase _cache;
 
-        public NoteRL(ApplicationDbContext context, ILogger<NoteRL> logger)
+        public NoteRL(ApplicationDbContext context, ILogger<NoteRL> logger, IConnectionMultiplexer redis)
         {
             _context = context;
             _logger = logger;
+            _cache = redis.GetDatabase();
+        }
+
+        private async Task UpdateCacheAsync(string cacheKey, Note note)
+        {
+            await _cache.ListRightPushAsync(cacheKey, JsonSerializer.Serialize(note));
+        }
+
+        private async Task<List<Note>> GetCachedNotesAsync(string cacheKey)
+        {
+            var cachedNotes = await _cache.ListRangeAsync(cacheKey);
+            return cachedNotes.Select(n => JsonSerializer.Deserialize<Note>(n)).ToList();
         }
 
         public async Task<Note> CreateNoteAsync(Note note)
         {
-            try
+            
+            _context.Notes.Add(note);
+            await _context.SaveChangesAsync();
+            var cacheKey = $"user:{note.CreatedBy}:notes";
+            var cachedNotes = await _cache.ListRangeAsync(cacheKey);
+
+            
+            if (cachedNotes.Any())
             {
-                _logger.LogInformation($"Creating a new note with title: {note.Title}");
-                _context.Notes.Add(note);
-                await _context.SaveChangesAsync();
-                _logger.LogInformation($"Note with title '{note.Title}' created successfully.");
-                return note;
+                await UpdateCacheAsync(cacheKey, note);
             }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Error creating note with title '{note.Title}': {ex.Message}");
-                throw;
-            }
+
+            return note;
         }
+
 
         public async Task<List<Note>> GetNotesByUserAsync(int userId)
         {
-            try
-            {
-                _logger.LogInformation($"Fetching notes for user with ID: {userId}");
-                var notes = await _context.Notes
-                    .Where(n => (n.CreatedBy == userId || n.Collaborators.Any(c => c.UserId == userId)) && !n.IsDeleted)
-                    .Include(n => n.NoteLabels)
-                        .ThenInclude(nl => nl.Label)
-                    .Include(n => n.Collaborators)
-                        .ThenInclude(c => c.User)
-                    .ToListAsync();
-                _logger.LogInformation($"Found {notes.Count} notes for user with ID: {userId}");
-                return notes;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Error fetching notes for user with ID {userId}: {ex.Message}");
-                throw;
-            }
+            var cacheKey = $"user:{userId}:notes";
+            var cachedNotes = await GetCachedNotesAsync(cacheKey);
+
+            if (cachedNotes.Any())
+                return cachedNotes;
+
+            var notes = await _context.Notes.Where(n => n.CreatedBy == userId && !n.IsDeleted && !n.IsArchived).ToListAsync();
+            foreach (var note in notes)
+                await UpdateCacheAsync(cacheKey, note);
+
+            return notes;
         }
 
         public async Task<List<Note>> GetArchiveNotes(int userId)
         {
-            try
-            {
-                _logger.LogInformation($"Fetching archived notes for user with ID: {userId}");
-                var notes = await _context.Notes
-                    .Where(n => (n.CreatedBy == userId || n.Collaborators.Any(c => c.UserId == userId)) && n.IsArchived)
-                    .Include(n => n.NoteLabels)
-                        .ThenInclude(nl => nl.Label)
-                    .Include(n => n.Collaborators)
-                        .ThenInclude(c => c.User)
-                    .ToListAsync();
-                _logger.LogInformation($"Found {notes.Count} archived notes for user with ID: {userId}");
-                return notes;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Error fetching archived notes for user with ID {userId}: {ex.Message}");
-                throw;
-            }
+            var cacheKey = $"user:{userId}:archivedNotes";
+            var cachedNotes = await GetCachedNotesAsync(cacheKey);
+
+            if (cachedNotes.Any())
+                return cachedNotes;
+
+            var notes = await _context.Notes.Where(n => n.CreatedBy == userId && n.IsArchived).ToListAsync();
+            foreach (var note in notes)
+                await UpdateCacheAsync(cacheKey, note);
+
+            return notes;
         }
 
         public async Task<List<Note>> GetNotesFromBin(int userId)
         {
-            try
-            {
-                _logger.LogInformation($"Fetching deleted notes for user with ID: {userId}");
-                var notes = await _context.Notes
-                    .Where(n => (n.CreatedBy == userId || n.Collaborators.Any(c => c.UserId == userId)) && n.IsDeleted)
-                    .Include(n => n.NoteLabels)
-                        .ThenInclude(nl => nl.Label)
-                    .Include(n => n.Collaborators)
-                        .ThenInclude(c => c.User)
-                    .ToListAsync();
-                _logger.LogInformation($"Found {notes.Count} deleted notes for user with ID: {userId}");
-                return notes;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Error fetching deleted notes for user with ID {userId}: {ex.Message}");
-                throw;
-            }
-        }
+            var cacheKey = $"user:{userId}:binNotes";
+            var cachedNotes = await GetCachedNotesAsync(cacheKey);
 
-        public async Task<Note> UpdateNoteAsync(UpdateNote note, int noteId, int userId)
-        {
-            try
-            {
-                _logger.LogInformation($"Updating note with ID: {noteId} for user with ID: {userId}");
-                var existingNote = await _context.Notes
-                    .Include(n => n.NoteLabels)
-                        .ThenInclude(nl => nl.Label)
-                    .FirstOrDefaultAsync(n => n.NoteId == noteId && n.CreatedBy == userId);
+            if (cachedNotes.Any())
+                return cachedNotes;
 
-                if (existingNote == null)
-                {
-                    _logger.LogWarning($"Note with ID {noteId} not found or unauthorized access.");
-                    return null;
-                }
+            var notes = await _context.Notes.Where(n => n.CreatedBy == userId && n.IsDeleted).ToListAsync();
+            foreach (var note in notes)
+                await UpdateCacheAsync(cacheKey, note);
 
-                existingNote.Title = note.Title;
-                existingNote.Description = note.Description;
-                existingNote.Color = note.Color;
-                existingNote.IsDeleted = note.IsDeleted;
-                existingNote.IsArchived = note.IsArchived;
-
-                await _context.SaveChangesAsync();
-                _logger.LogInformation($"Note with ID {noteId} updated successfully.");
-                return existingNote;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Error updating note with ID {noteId}: {ex.Message}");
-                throw;
-            }
-        }
-
-        public async Task<Note> ArchiveNoteAsync(int noteId, int userId)
-        {
-            try
-            {
-                _logger.LogInformation($"Archiving note with ID: {noteId} for user with ID: {userId}");
-                var existingNote = await _context.Notes
-                    .Include(n => n.NoteLabels)
-                        .ThenInclude(nl => nl.Label)
-                    .FirstOrDefaultAsync(n => n.NoteId == noteId && n.CreatedBy == userId);
-
-                if (existingNote == null)
-                {
-                    _logger.LogWarning($"Note with ID {noteId} not found or unauthorized.");
-                    throw new KeyNotFoundException("Note not found or unauthorized");
-                }
-
-                if (existingNote.IsDeleted)
-                {
-                    _logger.LogWarning($"Cannot archive a deleted note with ID {noteId}");
-                    throw new InvalidOperationException("Cannot archive a deleted note");
-                }
-
-                existingNote.IsArchived = true;
-                await _context.SaveChangesAsync();
-                _logger.LogInformation($"Note with ID {noteId} archived successfully.");
-                return existingNote;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Error archiving note with ID {noteId}: {ex.Message}");
-                throw;
-            }
-        }
-
-        public async Task<bool> UnArchiveNoteAsync(int noteId, int userId)
-        {
-            try
-            {
-                _logger.LogInformation($"Unarchiving note with ID: {noteId} for user with ID: {userId}");
-                var existingNote = await _context.Notes
-                    .Include(n => n.NoteLabels)
-                        .ThenInclude(nl => nl.Label)
-                    .FirstOrDefaultAsync(n => n.NoteId == noteId && n.CreatedBy == userId);
-                if (existingNote == null)
-                {
-                    _logger.LogWarning($"Note with ID {noteId} not found or unauthorized.");
-                    return false;
-                }
-                existingNote.IsArchived = false;
-                await _context.SaveChangesAsync();
-                _logger.LogInformation($"Note with ID {noteId} unarchived successfully.");
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Error unarchiving note with ID {noteId}: {ex.Message}");
-                throw;
-            }
-        }
-
-        public async Task<bool> DeleteNoteAsync(int noteId, int userId)
-        {
-            try
-            {
-                _logger.LogInformation($"Deleting note with ID: {noteId} for user with ID: {userId}");
-                var note = await _context.Notes
-                    .FirstOrDefaultAsync(n => n.NoteId == noteId && n.CreatedBy == userId);
-
-                if (note == null)
-                {
-                    _logger.LogWarning($"Note with ID {noteId} not found or unauthorized.");
-                    return false;
-                }
-
-                note.IsDeleted = true;
-                await _context.SaveChangesAsync();
-                _logger.LogInformation($"Note with ID {noteId} deleted successfully.");
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Error deleting note with ID {noteId}: {ex.Message}");
-                throw;
-            }
-        }
-
-        public async Task<bool> RestoreFromBin(int noteId, int userId)
-        {
-            try
-            {
-                _logger.LogInformation($"Restoring note with ID: {noteId} for user with ID: {userId}");
-                var note = await _context.Notes
-                  .FirstOrDefaultAsync(n => n.NoteId == noteId && n.CreatedBy == userId);
-                if (note == null)
-                {
-                    _logger.LogWarning($"Note with ID {noteId} not found or unauthorized.");
-                    return false;
-                }
-                note.IsDeleted = false;
-                await _context.SaveChangesAsync();
-                _logger.LogInformation($"Note with ID {noteId} restored successfully.");
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Error restoring note with ID {noteId}: {ex.Message}");
-                throw;
-            }
-        }
-
-        public async Task<bool> DeletePermNoteAsync(int noteId, int userId)
-        {
-            try
-            {
-                _logger.LogInformation($"Permanently deleting note with ID: {noteId} for user with ID: {userId}");
-                var note = await _context.Notes
-                    .FirstOrDefaultAsync(n => n.NoteId == noteId && n.CreatedBy == userId);
-                if (note == null)
-                {
-                    _logger.LogWarning($"Note with ID {noteId} not found or unauthorized.");
-                    return false;
-                }
-                _context.Notes.Remove(note);
-                await _context.SaveChangesAsync();
-                _logger.LogInformation($"Note with ID {noteId} permanently deleted.");
-                return true;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Error permanently deleting note with ID {noteId}: {ex.Message}");
-                throw;
-            }
+            return notes;
         }
 
         public async Task<Note> GetNoteByIdAsync(int noteId)
         {
-            try
-            {
-                _logger.LogInformation($"Fetching note with ID: {noteId}");
-                var note = await _context.Notes
-                    .Include(n => n.NoteLabels)
-                        .ThenInclude(nl => nl.Label)
-                    .Include(n => n.Collaborators)
-                        .ThenInclude(c => c.User)
-                    .FirstOrDefaultAsync(n => n.NoteId == noteId);
-
-                if (note == null)
-                {
-                    _logger.LogWarning($"Note with ID {noteId} not found.");
-                }
-
-                return note;
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError($"Error fetching note with ID {noteId}: {ex.Message}");
-                throw;
-            }
+            return await _context.Notes.FirstOrDefaultAsync(n => n.NoteId == noteId);
         }
+
+        public async Task<Note> UpdateNoteAsync(UpdateNote note, int noteId, int userId)
+        {
+            var existingNote = await _context.Notes.FirstOrDefaultAsync(n => n.NoteId == noteId && n.CreatedBy == userId);
+            if (existingNote == null) return null;
+
+            existingNote.Title = note.Title;
+            existingNote.Description = note.Description;
+            existingNote.Color = note.Color;
+            existingNote.IsDeleted = note.IsDeleted;
+            existingNote.IsArchived = note.IsArchived;
+
+            await _context.SaveChangesAsync();
+
+            var cacheKey = $"user:{userId}:notes";
+            var cachedNotes = await _cache.ListRangeAsync(cacheKey);
+            foreach (var cachedNote in cachedNotes)
+            {
+                var deserializedNote = JsonSerializer.Deserialize<Note>(cachedNote);
+                if (deserializedNote.NoteId == noteId)
+                {
+                    await _cache.ListRemoveAsync(cacheKey, cachedNote);
+                    break;
+                }
+            }
+            await UpdateCacheAsync(cacheKey, existingNote);
+
+            return existingNote;
+        }
+
+        public async Task<Note> ArchiveNoteAsync(int noteId, int userId)
+        {
+            var note = await _context.Notes.FirstOrDefaultAsync(n => n.NoteId == noteId && n.CreatedBy == userId);
+            if (note == null) return null;
+
+            note.IsArchived = true;
+            await _context.SaveChangesAsync();
+
+            var cacheKey = $"user:{userId}:notes";
+            var cachedNotes = await _cache.ListRangeAsync(cacheKey);
+
+
+            foreach (var cachedNote in cachedNotes)
+            {
+                var deserializedNote = JsonSerializer.Deserialize<Note>(cachedNote);
+                if (deserializedNote.NoteId == noteId)
+                {
+                    await _cache.ListRemoveAsync(cacheKey, cachedNote);
+                    break;
+                }
+            }
+
+            var serializedNote = JsonSerializer.Serialize(note);
+            var archivedCacheKey = $"user:{userId}:archivedNotes";
+
+            var existingNotes = await _cache.ListRangeAsync(archivedCacheKey);
+
+           
+            if (existingNotes.Any())
+            {
+                
+                await _cache.ListRightPushAsync(archivedCacheKey, serializedNote);
+            }
+
+
+            return note;
+        }
+
+
+        public async Task<bool> UnArchiveNoteAsync(int noteId, int userId)
+        {
+            var note = await _context.Notes.FirstOrDefaultAsync(n => n.NoteId == noteId && n.CreatedBy == userId && n.IsArchived);
+            if (note == null) return false;
+
+            note.IsArchived = false;
+            await _context.SaveChangesAsync();
+
+            var cacheKey = $"user:{userId}:notes";
+            var archivedCacheKey = $"user:{userId}:archivedNotes";
+
+            var serializedNote = JsonSerializer.Serialize(note);
+            await _cache.ListRightPushAsync(cacheKey, serializedNote); // Move note back to active notes
+
+            var archivedNotes = await _cache.ListRangeAsync(archivedCacheKey);
+
+            foreach (var cachedNote in archivedNotes)
+            {
+                var deserializedNote = JsonSerializer.Deserialize<Note>(cachedNote);
+                if (deserializedNote.NoteId == noteId)
+                {
+                    await _cache.ListRemoveAsync(archivedCacheKey, cachedNote);
+                    break;
+                }
+            }
+
+            return true;
+        }
+
+        public async Task<bool> DeleteNoteAsync(int noteId, int userId)
+        {
+            var note = await _context.Notes.FirstOrDefaultAsync(n => n.NoteId == noteId && n.CreatedBy == userId);
+            if (note == null) return false;
+
+            note.IsDeleted = true;
+            await _context.SaveChangesAsync();
+
+            var cacheKey = $"user:{userId}:notes";
+            var cachedNotes = await _cache.ListRangeAsync(cacheKey);
+
+            foreach (var cachedNote in cachedNotes)
+            {
+                var deserializedNote = JsonSerializer.Deserialize<Note>(cachedNote);
+                if (deserializedNote.NoteId == noteId)
+                {
+                    await _cache.ListRemoveAsync(cacheKey, cachedNote);
+                    break;
+                }
+            }
+
+            var serializedNote = JsonSerializer.Serialize(note);
+            var binCacheKey = $"user:{userId}:binNotes";
+            var existingBinNotes = await _cache.ListRangeAsync(binCacheKey);
+
+            if (existingBinNotes.Any())
+            {
+               
+                await _cache.ListRightPushAsync(binCacheKey, serializedNote);
+            }
+
+
+            return true;
+        }
+        public async Task<bool> RestoreFromBin(int noteId, int userId)
+        {
+            var note = await _context.Notes.FirstOrDefaultAsync(n => n.NoteId == noteId && n.CreatedBy == userId && n.IsDeleted);
+            if (note == null) return false;
+            note.IsDeleted = false;
+            await _context.SaveChangesAsync();
+
+            var serializedNote = JsonSerializer.Serialize(note);
+
+            var binCacheKey = $"user:{userId}:binNotes";
+            var deletedNotes = await _cache.ListRangeAsync(binCacheKey);
+
+            foreach (var deletedNote in deletedNotes)
+            {
+                var deserializedNote = JsonSerializer.Deserialize<Note>(deletedNote);
+                if (deserializedNote.NoteId == noteId)
+                {
+                    await _cache.ListRemoveAsync(binCacheKey, deletedNote);
+                    break;
+                }
+            }
+            var notesCacheKey = $"user:{userId}:notes";
+            await _cache.ListRightPushAsync(notesCacheKey, serializedNote);
+
+            return true;
+        }
+        public async Task<bool> DeletePermNoteAsync(int noteId, int userId)
+        {
+
+            var note = await _context.Notes.FirstOrDefaultAsync(n => n.NoteId == noteId && n.CreatedBy == userId);
+            if (note == null) return false;
+
+            _context.Notes.Remove(note);
+            await _context.SaveChangesAsync();
+
+            var binCacheKey = $"user:{userId}:binNotes";
+
+            var binCachedNotes = await _cache.ListRangeAsync(binCacheKey);
+            foreach (var binCachedNote in binCachedNotes)
+            {
+                var noteJson = binCachedNote.ToString();
+                var cachedNote = JsonSerializer.Deserialize<Note>(noteJson);
+
+                if (cachedNote?.NoteId == noteId)
+                {
+                    await _cache.ListRemoveAsync(binCacheKey, binCachedNote);
+                    break;
+                }
+            }
+
+            return true;
+        }
+
     }
 }

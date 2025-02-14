@@ -7,7 +7,7 @@ using ModelLayer;
 
 namespace FundooNotes.Controllers
 {
-    [Route("/label")]
+    [Route("/labels")]
     [ApiController]
     public class LabelController : ControllerBase
     {
