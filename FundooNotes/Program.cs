@@ -16,6 +16,9 @@ using System.Threading.Tasks;
 using RepositoryLayer.Services;
 using StackExchange.Redis;
 using RepoLayer.Entity;
+using RabbitMQ.Client;
+using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +42,25 @@ builder.Services.AddScoped<ICollaboratorRL, CollaboratorRL>();
 
 // Register Redis connection
 builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnection")));
+
+// Register RabbitMQ connection
+builder.Services.AddSingleton<IConnection>(sp =>
+{
+    var factory = new ConnectionFactory()
+    {
+        HostName = builder.Configuration["RabbitMQ:HostName"],
+        UserName = builder.Configuration["RabbitMQ:UserName"],
+        Password = builder.Configuration["RabbitMQ:Password"],
+        DispatchConsumersAsync = true
+    };
+    return factory.CreateConnection();
+});
+
+builder.Services.AddSingleton<RabbitMQ.Client.IModel>(sp =>
+{
+    var connection = sp.GetRequiredService<IConnection>();
+    return connection.CreateModel();
+});
 
 // Add controllers
 builder.Services.AddControllers();

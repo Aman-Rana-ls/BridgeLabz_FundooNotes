@@ -370,6 +370,22 @@
   },
   {
     "ContainingType": "FundooNotes.Controllers.UserController",
+    "Method": "RefreshToken",
+    "RelativePath": "users/refresh-token",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "ModelLayer.RefreshTokenModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FundooNotes.Controllers.UserController",
     "Method": "ResetPassword",
     "RelativePath": "users/set-new-password",
     "HttpMethod": "POST",

@@ -87,3 +87,6 @@ D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\Microsoft.IdentityModel.Abstrac
 D:\.net\FundooNotes\FundooNotes\obj\Debug\net6.0\FundooNotes.sourcelink.json
 D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\Pipelines.Sockets.Unofficial.dll
 D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\StackExchange.Redis.dll
+D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\RabbitMQ.Client.dll
+D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\System.Threading.Channels.dll
+D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.Google.dll

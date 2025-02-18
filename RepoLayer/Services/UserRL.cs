@@ -60,6 +60,12 @@ namespace RepoLayer.Services
             }
         }
 
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return user;
+        }
+
         public async Task<string> LoginAsync(LoginModel model)
         {
             try
@@ -128,7 +134,7 @@ namespace RepoLayer.Services
             }
         }
 
-        private string GenerateJwtToken(User user)
+        public string GenerateJwtToken(User user)
         {
             try
             {
@@ -160,6 +166,80 @@ namespace RepoLayer.Services
             catch (Exception ex)
             {
                 _logger.LogError($"Error generating JWT token: {ex.Message}");
+                throw;
+            }
+        }
+
+        // Added methods for handling refresh tokens
+
+        public async Task StoreRefreshTokenAsync(string email, string refreshToken)
+        {
+            try
+            {
+                _logger.LogInformation($"Storing refresh token for user with email: {email}");
+
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                if (user != null)
+                {
+                    user.RefreshToken = refreshToken;
+                    _context.Users.Update(user);
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation($"Refresh token stored for user with email: {email}");
+                }
+                else
+                {
+                    _logger.LogWarning($"User with email {email} not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error storing refresh token for email {email}: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<string> GetEmailFromRefreshTokenAsync(string refreshToken)
+        {
+            try
+            {
+                _logger.LogInformation($"Fetching email from refresh token: {refreshToken}");
+
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+                if (user != null)
+                {
+                    _logger.LogInformation($"Email found for refresh token: {user.Email}");
+                    return user.Email;
+                }
+
+                _logger.LogWarning($"No user found for refresh token: {refreshToken}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error fetching email for refresh token {refreshToken}: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<string> GetRefreshTokenAsync(string email)
+        {
+            try
+            {
+                _logger.LogInformation($"Fetching refresh token for user with email: {email}");
+
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                if (user != null)
+                {
+                    _logger.LogInformation($"Refresh token found for user with email: {email}");
+                    return user.RefreshToken;
+                }
+
+                _logger.LogWarning($"No refresh token found for user with email: {email}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error fetching refresh token for email {email}: {ex.Message}");
                 throw;
             }
         }

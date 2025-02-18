@@ -30,5 +30,8 @@ namespace RepoLayer.Entity
         // Add the CollaboratedNotes navigation property to represent the many-to-many relationship with Note
         [JsonIgnore] // Prevent circular reference during serialization
         public virtual ICollection<NoteCollaborator> CollaboratedNotes { get; set; } = new List<NoteCollaborator>();
+
+        // New RefreshToken property to store refresh tokens for the user
+        public string RefreshToken { get; set; }
     }
 }
