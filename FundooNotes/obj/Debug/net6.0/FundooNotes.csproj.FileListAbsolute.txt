@@ -90,3 +90,9 @@ D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\StackExchange.Redis.dll
 D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\RabbitMQ.Client.dll
 D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\System.Threading.Channels.dll
 D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.Google.dll
+D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\BouncyCastle.Cryptography.dll
+D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\MailKit.dll
+D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\MimeKit.dll
+D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\System.Formats.Asn1.dll
+D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\.net\FundooNotes\FundooNotes\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll

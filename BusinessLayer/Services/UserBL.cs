@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -17,6 +15,9 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RepoLayer.Entity;
 using RepoLayer.Interfaces;
+using MailKit.Net.Smtp;
+using MimeKit;
+using MailKit.Security;
 
 namespace BusinessLayer.Services
 {
@@ -25,10 +26,10 @@ namespace BusinessLayer.Services
         private readonly IUserRL _userRL;
         private readonly IConfiguration _configuration;
         private readonly ILogger<UserBL> _logger;
-        private readonly string _smtpServer = "smtp.gmail.com";
-        private readonly string _smtpUser = "gsh401111@gmail.com";
-        private readonly string _smtpPassword = "awsl zxui xxzx gvcu";
-        private readonly int _smtpPort = 587;
+        private readonly string _Server = "smtp.gmail.com";
+        private readonly string _User = "gsh401111@gmail.com";
+        private readonly string _Password = "awsl zxui xxzx gvcu";
+        private readonly int _Port = 587;
         private readonly IConnection _rabbitMqConnection;
         private readonly IModel _rabbitMqChannel;
 
@@ -84,7 +85,6 @@ namespace BusinessLayer.Services
                 User u = await _userRL.GetUserByEmailAsync(email);
 
                 var accessToken = _userRL.GenerateJwtToken(u);
-
 
                 _logger.LogInformation($"Refresh token generated successfully for email: {email}");
 
@@ -157,7 +157,6 @@ namespace BusinessLayer.Services
                 }
 
                 // Generate and return a new access token
-               
                 User u = await _userRL.GetUserByEmailAsync(emailClaim.Value);
                 var newAccessToken = _userRL.GenerateJwtToken(u);
 
@@ -171,8 +170,6 @@ namespace BusinessLayer.Services
                 throw;
             }
         }
-
-
 
         public async Task<string> RegisterAsync(RegisterModel model)
         {
@@ -230,9 +227,8 @@ namespace BusinessLayer.Services
                 SendEmailToQueue(email);
 
                 _logger.LogInformation($"Login successful for {model.Email}, email sent to queue.");
-                var tokens = await GenerateRefreshToken(model.Email); 
+                var tokens = await GenerateRefreshToken(model.Email);
 
-                
                 return new TokenResponseModel
                 {
                     AccessToken = loginResult,
@@ -245,7 +241,6 @@ namespace BusinessLayer.Services
                 throw;
             }
         }
-
 
         public async Task<string> SendVerificationEmailAsync(EmailModel model)
         {
@@ -264,7 +259,7 @@ namespace BusinessLayer.Services
                 {
                     To = model.Email,
                     Subject = "Verify Your Email Address",
-                    Body = $"Please use the following token to verify your email:\n{token}"
+                    Body = $"Please use the following token to verify your email:     \t\n{token}"
                 };
 
                 SendEmailToQueue(email);
@@ -361,7 +356,7 @@ namespace BusinessLayer.Services
 
                     _logger.LogInformation($"Received email from RabbitMQ: {email.To}");
 
-                    // Send the email
+                    // Send the email using MailKit
                     await SendEmailAsync(email.To, email.Subject, email.Body);
                 }
                 catch (Exception ex)
@@ -379,23 +374,25 @@ namespace BusinessLayer.Services
         {
             try
             {
-                var smtpClient = new SmtpClient(_smtpServer)
+                var emailMessage = new MimeMessage();
+                emailMessage.From.Add(new MailboxAddress("FundooNotes", _User));
+                emailMessage.To.Add(new MailboxAddress("", to));
+                emailMessage.Subject = subject;
+
+                var bodyBuilder = new BodyBuilder
                 {
-                    Port = _smtpPort,
-                    Credentials = new NetworkCredential(_smtpUser, _smtpPassword),
-                    EnableSsl = true,
+                    HtmlBody = body
                 };
 
-                var mailMessage = new MailMessage
-                {
-                    From = new MailAddress(_smtpUser),
-                    Subject = subject,
-                    Body = body,
-                    IsBodyHtml = true,
-                };
-                mailMessage.To.Add(to);
+                emailMessage.Body = bodyBuilder.ToMessageBody();
 
-                await smtpClient.SendMailAsync(mailMessage);
+                using (var client = new SmtpClient())
+                {
+                    await client.ConnectAsync(_Server, _Port, SecureSocketOptions.StartTls);
+                    await client.AuthenticateAsync(_User, _Password);
+                    await client.SendAsync(emailMessage);
+                    await client.DisconnectAsync(true);
+                }
 
                 _logger.LogInformation($"Email sent to {to} with subject: {subject}");
             }
