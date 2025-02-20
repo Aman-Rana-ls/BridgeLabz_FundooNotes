@@ -23,7 +23,7 @@ namespace BusinessLayer.Services
         private readonly ILogger<UserBL> _logger;
         private readonly string _smtpServer = "smtp.gmail.com";
         private readonly string _smtpUser = "gsh401111@gmail.com";
-        private readonly string _smtpPassword = "awsl zxui xxzx gvcu";
+        private readonly string _smtpPassword = "xxxx xxxx xxxx xxxx";
         private readonly int _smtpPort = 587;
 
         public UserBL(IUserRL authRepository, IConfiguration configuration, ILogger<UserBL> logger)
