@@ -28,7 +28,7 @@ namespace BusinessLayer.Services
         private readonly ILogger<UserBL> _logger;
         private readonly string _Server = "smtp.gmail.com";
         private readonly string _User = "gsh401111@gmail.com";
-        private readonly string _Password = "awsl zxui xxzx gvcu";
+        private readonly string _Password = "xxxx xxxx xxxx xxxx";
         private readonly int _Port = 587;
         private readonly IConnection _rabbitMqConnection;
         private readonly IModel _rabbitMqChannel;
